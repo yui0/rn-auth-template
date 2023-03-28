@@ -1,6 +1,10 @@
 # rn-auth-template
 
-React Native Auth Template
+React Native Auth Template with Reqres
+
+Email: eve.holt@reqres.in
+
+Password: cityslicka
 
 # Features
 
@@ -19,5 +23,6 @@ expo publish
 
 # ref
 
+* https://reqres.in/
 * https://github.com/venits/react-native-login-template
 

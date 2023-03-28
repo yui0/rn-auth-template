@@ -151,6 +151,8 @@ function RegisterScreen({ navigation }) {
   const [email, setEmail] = React.useState({ value: '', error: '' })
   const [password, setPassword] = React.useState({ value: '', error: '' })
 
+  const { signUp } = React.useContext(AuthContext);
+
   const onSignUpPressed = () => {
     const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
@@ -161,11 +163,12 @@ function RegisterScreen({ navigation }) {
       setPassword({ ...password, error: passwordError });
       return;
     }
-    navigation.reset({
+    /*navigation.reset({
       index: 0,
       //routes: [{ name: 'Dashboard' }],
       routes: [{ name: 'LoginScreen' }],
-    });
+    });*/
+    signUp(name, email, password);
   }
 
   return (
@@ -346,7 +349,8 @@ export default function App({ navigation }) {
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
-        console.log(email);
+
+        //console.log(email);
         // eve.holt@reqres.in
         // cityslicka
         const ENDPOINT = 'https://reqres.in/api/login';
@@ -368,14 +372,32 @@ export default function App({ navigation }) {
 
         //dispatch({ type:'SIGN_IN', token:'dummy-auth-token' });
       },
-      signOut: () => dispatch({ type: 'SIGN_OUT' }),
-      signUp: async (data) => {
+      signOut: () => dispatch({ type:'SIGN_OUT' }),
+      signUp: async (name, email, password) => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
 
-        dispatch({ type:'SIGN_IN', token:'dummy-auth-token' });
+        const req = {
+          email: email,
+          password: password,
+        };
+        axios.post('https://reqres.in/api/register', req).then(
+          (response) => {
+            if (response.status === 200) {
+               alert("Registration successful", response.message);
+               dispatch({ type:'SIGN_IN', token:'dummy-auth-token' });
+            } else {
+              alert('An error occurred. Please try again later.');
+            }
+          },
+          (err) => {
+            alert('Could not establish connection' ,err.message);
+          },
+        );
+
+        //dispatch({ type:'SIGN_IN', token:'dummy-auth-token' });
       },
     }),
     []
