@@ -1,5 +1,19 @@
 import * as React from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  cancelAnimation,
+  Easing,
+} from 'react-native-reanimated';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -8,9 +22,50 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 const AuthContext = React.createContext();
 
 function SplashScreen() {
+  const rotation = useSharedValue(0);
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          rotateZ: `${rotation.value}deg`,
+        },
+      ],
+    };
+  }, [rotation.value]);
+
+  React.useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, {
+        duration: 1000,
+        easing: Easing.linear,
+      }),
+      200
+    );
+    return () => cancelAnimation(rotation);
+  }, []);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+    },
+    spinner: {
+      height: 60,
+      width: 60,
+      borderRadius: 30,
+      borderWidth: 7,
+      borderTopColor: '#f5f5f5',
+      borderRightColor: '#f5f5f5',
+      borderBottomColor: '#f5f5f5',
+      borderLeftColor: 'blue',
+    },
+  });
+
   return (
-    <View>
-      <Text>Loading...</Text>
+    <View style={styles.container}>
+      <Animated.View style={[styles.spinner, animatedStyles]} />
     </View>
   );
 }
@@ -221,7 +276,7 @@ export default function App({ navigation }) {
           // User is signed in
           <Tab.Navigator initialRouteName="Home">
             <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Contact" component={Profile} />
+            <Tab.Screen name="SplashScreen" component={SplashScreen} />
           </Tab.Navigator>
         )}
       </NavigationContainer>
