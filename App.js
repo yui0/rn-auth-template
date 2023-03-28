@@ -393,6 +393,8 @@ export default function App({ navigation }) {
   const createScreenOptions = ({ route }) => {
       const iconName = TAB_ICON[route.name];
       return {
+          activeTintColor: 'tomato',//FIXME
+          inactiveTintColor: 'gray',//FIXME
           tabBarIcon: ({ size, color }) => (
               <Ionicons name={iconName} size={size} color={color} />
           )
@@ -422,13 +424,7 @@ export default function App({ navigation }) {
           </Stack.Navigator>
         ) : (
           // User is signed in
-          <Tab.Navigator initialRouteName="Home"
-            screenOptions={createScreenOptions}
-            tabBarOptions={{
-              activeTintColor: 'tomato',
-              inactiveTintColor: 'gray',
-            }}
-          >
+          <Tab.Navigator initialRouteName="Home" screenOptions={createScreenOptions}>
             <Tab.Screen name="Home" component={HomeScreen}
               options={{
                 headerRight: () => (
