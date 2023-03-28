@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Button,
+  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -17,9 +18,49 @@ import Animated, {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const AuthContext = React.createContext();
+
+function HomeScreen() {
+  const { signOut } = React.useContext(AuthContext);
+
+  return (
+    <View>
+      <Text>Signed in!</Text>
+      <Button title="Sign out" onPress={signOut} />
+    </View>
+  );
+}
+function Profile() {
+  const { signOut } = React.useContext(AuthContext);
+
+  return (
+    <View>
+      <Text>Profile</Text>
+      <Button title="Sign out" onPress={signOut} />
+    </View>
+  );
+}
+function About() {
+  const { signOut } = React.useContext(AuthContext);
+
+  return (
+    <View>
+      <Text>Profile</Text>
+      <Button title="Sign out" onPress={signOut} />
+    </View>
+  );
+}
+function Contact() {
+  const { signOut } = React.useContext(AuthContext);
+
+  return (
+    <View>
+      <Text>Profile</Text>
+      <Button title="Sign out" onPress={signOut} />
+    </View>
+  );
+}
 
 function SplashScreen() {
   const rotation = useSharedValue(0);
@@ -70,47 +111,6 @@ function SplashScreen() {
   );
 }
 
-function HomeScreen() {
-  const { signOut } = React.useContext(AuthContext);
-
-  return (
-    <View>
-      <Text>Signed in!</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </View>
-  );
-}
-function Profile() {
-  const { signOut } = React.useContext(AuthContext);
-
-  return (
-    <View>
-      <Text>Profile</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </View>
-  );
-}
-function About() {
-  const { signOut } = React.useContext(AuthContext);
-
-  return (
-    <View>
-      <Text>Profile</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </View>
-  );
-}
-function Contact() {
-  const { signOut } = React.useContext(AuthContext);
-
-  return (
-    <View>
-      <Text>Profile</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </View>
-  );
-}
-
 function SignInScreen() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -118,7 +118,9 @@ function SignInScreen() {
   const { signIn } = React.useContext(AuthContext);
 
   return (
-    <View>
+    <View style={{ flex:1, padding:20, width:'100%', maxWidth:680,
+      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+      <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
       <TextInput
         placeholder="Username"
         value={username}
@@ -137,7 +139,6 @@ function SignInScreen() {
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
 const screenOptionStyle = {
   headerStyle: {
     backgroundColor: "#9AC4F8",
@@ -247,10 +248,6 @@ export default function App({ navigation }) {
     []
   );
 
-          /*<Drawer.Navigator initialRouteName="Home">
-            <Drawer.Screen name="Home" component={BottomTabNavigator} />
-            <Drawer.Screen name="Contact" component={ContactStackNavigator} />
-          </Drawer.Navigator>*/
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
