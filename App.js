@@ -1,8 +1,10 @@
 // ©2023 Yuichiro Nakada
 import * as React from 'react';
 import {
+  Alert,
   Button,
   Image,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -122,28 +124,30 @@ function ResetPasswordScreen({ navigation }) {
   }
 
   return (
-    <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
-      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
-      <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
-      <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Restore Password</Text>
-      <TextInput
-        placeholder="E-mail address"
-        returnKeyType="done"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        description="You will receive email with password reset link."
-        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
-      />
-      <View style={{ width:'100%' }}>
-        <Button title="Send Instructions" onPress={sendResetPasswordEmail} style={{ marginTop: 16 }} />
+    <KeyboardAvoidingView behavior="padding">
+      <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
+        alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+        <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
+        <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Restore Password</Text>
+        <TextInput
+          placeholder="E-mail address"
+          returnKeyType="done"
+          value={email.value}
+          onChangeText={(text) => setEmail({ value: text, error: '' })}
+          error={!!email.error}
+          errorText={email.error}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          description="You will receive email with password reset link."
+          style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+        />
+        <View style={{ width:'100%' }}>
+          <Button title="Send Instructions" onPress={sendResetPasswordEmail} style={{ marginTop: 16 }} />
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 function RegisterScreen({ navigation }) {
@@ -172,52 +176,54 @@ function RegisterScreen({ navigation }) {
   }
 
   return (
-    <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
-      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
-      <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
-      <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Create Account</Text>
-      <TextInput
-        placeholder="Name"
-        returnKeyType="next"
-        value={name.value}
-        onChangeText={(text) => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
-        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
-      />
-      <TextInput
-        placeholder="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
-      />
-      <TextInput
-        placeholder="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
-        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
-      />
-      <View style={{ width:'100%' }}>
-        <Button title="SIGN UP" onPress={onSignUpPressed} style={{ marginTop: 24 }} />
+    <KeyboardAvoidingView behavior="padding">
+      <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
+        alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+        <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
+        <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Create Account</Text>
+        <TextInput
+          placeholder="Name"
+          returnKeyType="next"
+          value={name.value}
+          onChangeText={(text) => setName({ value: text, error: '' })}
+          error={!!name.error}
+          errorText={name.error}
+          style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+        />
+        <TextInput
+          placeholder="Email"
+          returnKeyType="next"
+          value={email.value}
+          onChangeText={(text) => setEmail({ value: text, error: '' })}
+          error={!!email.error}
+          errorText={email.error}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+        />
+        <TextInput
+          placeholder="Password"
+          returnKeyType="done"
+          value={password.value}
+          onChangeText={(text) => setPassword({ value: text, error: '' })}
+          error={!!password.error}
+          errorText={password.error}
+          secureTextEntry
+          style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+        />
+        <View style={{ width:'100%' }}>
+          <Button title="SIGN UP" onPress={onSignUpPressed} style={{ marginTop: 24 }} />
+        </View>
+        <View style={{ flexDirection:'row', marginTop:4 }}>
+          <Text>Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
+            <Text style={{ fontWeight:'bold' }}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={{ flexDirection:'row', marginTop:4 }}>
-        <Text>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
-          <Text style={{ fontWeight:'bold' }}>Login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 function LoginScreen({ navigation }) {
@@ -242,48 +248,50 @@ function LoginScreen({ navigation }) {
   }
 
   return (
-    <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
-      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
-      <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
-      <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Welcome back!</Text>
-      <TextInput
-        placeholder="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error:'' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
-      />
-      <TextInput
-        placeholder="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
-        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
-      />
-      <View style={{ width:'100%', alignItems:'flex-end', marginBottom:24 }}>
-        <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordScreen')}>
-          <Text style={{ fontSize:13 }}>Forgot your password?</Text>
-        </TouchableOpacity>
+    <KeyboardAvoidingView behavior="padding">
+      <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
+        alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+        <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
+        <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Welcome back!</Text>
+        <TextInput
+          placeholder="Email"
+          returnKeyType="next"
+          value={email.value}
+          onChangeText={(text) => setEmail({ value: text, error:'' })}
+          error={!!email.error}
+          errorText={email.error}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+        />
+        <TextInput
+          placeholder="Password"
+          returnKeyType="done"
+          value={password.value}
+          onChangeText={(text) => setPassword({ value: text, error: '' })}
+          error={!!password.error}
+          errorText={password.error}
+          secureTextEntry
+          style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+        />
+        <View style={{ width:'100%', alignItems:'flex-end', marginBottom:24 }}>
+          <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordScreen')}>
+            <Text style={{ fontSize:13 }}>Forgot your password?</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ width:'100%' }}>
+          <Button mode="contained" onPress={onLoginPressed} title="LOGIN" />
+        </View>
+        <View style={{ flexDirection:'row', marginTop:4 }}>
+          <Text>Don’t have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
+            <Text style={{ fontWeight:'bold' }}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={{ width:'100%' }}>
-        <Button mode="contained" onPress={onLoginPressed} title="LOGIN" />
-      </View>
-      <View style={{ flexDirection:'row', marginTop:4 }}>
-        <Text>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
-          <Text style={{ fontWeight:'bold' }}>Sign up</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -430,7 +438,7 @@ export default function App({ navigation }) {
           </Stack.Navigator>
         ) : state.userToken == null ? (
           // No token found, user isn't signed in
-        <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown:false}}>
+          <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown:false}}>
             <Stack.Screen name="LoginScreen" component={LoginScreen}
               options={{
                 title: 'Sign in',
