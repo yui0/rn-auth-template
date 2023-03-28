@@ -7,6 +7,7 @@ React Native Auth Template
 * React Native
 * React Navigation
 * Async Storage
+* axios
 
 # How to use
 

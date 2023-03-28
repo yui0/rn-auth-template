@@ -1,3 +1,4 @@
+// ©2023 Yuichiro Nakada
 import * as React from 'react';
 import {
   Button,
@@ -19,8 +20,9 @@ import Animated, {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 //import Icon from 'react-native-vector-icons/FontAwesome';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
@@ -35,7 +37,7 @@ function HomeScreen() {
       alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
       <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
       <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Let's start!</Text>
-      <Text style={{ marginBottom:12 }}>Your amazing app starts here. Open you favorite code editor and start editing this project.</Text>
+      <Text style={{ marginBottom:12 }}>Your amazing app starts here. Open your favorite code editor and start editing this project.</Text>
       <View style={{ width:'100%' }}>
         <Button title="SIGN OUT" onPress={signOut} style={{ marginTop: 24 }} />
       </View>
@@ -90,29 +92,6 @@ function SplashScreen() {
       <Animated.View style={[styles.spinner, animatedStyles]} />
     </View>
   );
-}
-
-const ENDPOINT = 'https://reqres.in/api/login';
-function login({ username, password }) {
-  return fetch(`${ENDPOINT}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Cookie: '__cfduid=d62490b161e2db30c916b0e697da3cd851615242775',
-    },
-    body: JSON.stringify({ email: username, password: password }),
-    redirect: 'follow',
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error('Error');
-      return res.json();
-    })
-    .then((response) => {
-      // JWT
-      const { token } = response;
-      return token;
-    });
 }
 
 export function emailValidator(email) {
@@ -256,7 +235,7 @@ function LoginScreen({ navigation }) {
       index: 0,
       routes: [{ name: 'Dashboard' }],
     })*/
-    signIn(email, password);
+    signIn(email.value, password.value);
   }
 
   return (
@@ -307,7 +286,6 @@ function LoginScreen({ navigation }) {
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
 export default function App({ navigation }) {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -363,13 +341,32 @@ export default function App({ navigation }) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data) => {
+      signIn: async (email, password) => {
         // In a production app, we need to send some data (usually username, password) to server and get a token
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
+        console.log(email);
+        // eve.holt@reqres.in
+        // cityslicka
+        const ENDPOINT = 'https://reqres.in/api/login';
+        axios.post(ENDPOINT, {
+          email: email,
+          password: password
+        })
+        .then((response) => {
+          //console.log(response);
+          if (response.status === 200) {
+            dispatch({ type:'SIGN_IN', token:response.data.token });
+          } else {
+            alert('Email or password is incorrect.');
+          }
+        })
+        .catch((error) => {
+          alert('Email or password is incorrect. [eve.holt@reqres.in / cityslicka]');
+        });
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        //dispatch({ type:'SIGN_IN', token:'dummy-auth-token' });
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
       signUp: async (data) => {
@@ -378,7 +375,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        dispatch({ type:'SIGN_IN', token:'dummy-auth-token' });
       },
     }),
     []
