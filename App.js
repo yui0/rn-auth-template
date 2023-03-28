@@ -22,7 +22,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from '@react-native-community/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 //import Icon from 'react-native-vector-icons/FontAwesome';
-//import { BeakerIcon } from '@heroicons/react/24/solid'
+//import { BeakerIcon } from '@heroicons/react/24/solid';
+//import Icon from 'supercons';
 
 const AuthContext = React.createContext();
 
@@ -383,6 +384,21 @@ export default function App({ navigation }) {
     []
   );
 
+  // https://ionic.io/ionicons
+  const TAB_ICON = {
+      Home: 'ios-home',
+      Splash: 'ios-snow',
+      Settings: 'ios-list',
+  };
+  const createScreenOptions = ({ route }) => {
+      const iconName = TAB_ICON[route.name];
+      return {
+          tabBarIcon: ({ size, color }) => (
+              <Ionicons name={iconName} size={size} color={color} />
+          )
+      };
+  };
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
@@ -407,21 +423,7 @@ export default function App({ navigation }) {
         ) : (
           // User is signed in
           <Tab.Navigator initialRouteName="Home"
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-
-                if (route.name === 'Home') {
-                  iconName = focused
-                    ? 'ios-information-circle'
-                    : 'ios-information-circle-outline';
-                } else if (route.name === 'Settings') {
-                  iconName = focused ? 'ios-list-box' : 'ios-list';
-                }
-
-                return <Ionicons name={iconName} size={size} color={color} />;
-              },
-            })}
+            screenOptions={createScreenOptions}
             tabBarOptions={{
               activeTintColor: 'tomato',
               inactiveTintColor: 'gray',
@@ -430,9 +432,12 @@ export default function App({ navigation }) {
             <Tab.Screen name="Home" component={HomeScreen}
               options={{
                 headerRight: () => (
-                  <TouchableOpacity onPress={() => alert('This is a button!')} >
-                    <Text style={{ color:"#000" }}>Button</Text>
-                  </TouchableOpacity>
+                  <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity style={{flex: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 10}}
+                      onPress={() => authContext.signOut()} >
+                      <Ionicons name="ios-log-out-outline" size={24} />
+                    </TouchableOpacity>
+                  </View>
                 )
               }}
             />

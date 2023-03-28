@@ -13,6 +13,7 @@ React Native Auth Template
 ```
 yarn
 yarn web
+expo publish
 ```
 
 # ref
