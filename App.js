@@ -19,6 +19,10 @@ import Animated, {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AsyncStorage from '@react-native-community/async-storage';
+import { Ionicons } from '@expo/vector-icons';
+//import Icon from 'react-native-vector-icons/FontAwesome';
+//import { BeakerIcon } from '@heroicons/react/24/solid'
 
 const AuthContext = React.createContext();
 
@@ -85,6 +89,29 @@ function SplashScreen() {
       <Animated.View style={[styles.spinner, animatedStyles]} />
     </View>
   );
+}
+
+const ENDPOINT = 'https://reqres.in/api/login';
+function login({ username, password }) {
+  return fetch(`${ENDPOINT}`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Cookie: '__cfduid=d62490b161e2db30c916b0e697da3cd851615242775',
+    },
+    body: JSON.stringify({ email: username, password: password }),
+    redirect: 'follow',
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error('Error');
+      return res.json();
+    })
+    .then((response) => {
+      // JWT
+      const { token } = response;
+      return token;
+    });
 }
 
 export function emailValidator(email) {
@@ -379,9 +406,37 @@ export default function App({ navigation }) {
           </Stack.Navigator>
         ) : (
           // User is signed in
-          <Tab.Navigator initialRouteName="Home">
-            <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="SplashScreen" component={SplashScreen} />
+          <Tab.Navigator initialRouteName="Home"
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+
+                if (route.name === 'Home') {
+                  iconName = focused
+                    ? 'ios-information-circle'
+                    : 'ios-information-circle-outline';
+                } else if (route.name === 'Settings') {
+                  iconName = focused ? 'ios-list-box' : 'ios-list';
+                }
+
+                return <Ionicons name={iconName} size={size} color={color} />;
+              },
+            })}
+            tabBarOptions={{
+              activeTintColor: 'tomato',
+              inactiveTintColor: 'gray',
+            }}
+          >
+            <Tab.Screen name="Home" component={HomeScreen}
+              options={{
+                headerRight: () => (
+                  <TouchableOpacity onPress={() => alert('This is a button!')} >
+                    <Text style={{ color:"#000" }}>Button</Text>
+                  </TouchableOpacity>
+                )
+              }}
+            />
+            <Tab.Screen name="Splash" component={SplashScreen} />
           </Tab.Navigator>
         )}
       </NavigationContainer>

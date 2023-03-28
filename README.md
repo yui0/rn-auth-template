@@ -2,6 +2,12 @@
 
 React Native Auth Template
 
+# Features
+
+* React Native
+* React Navigation
+* Async Storage
+
 # How to use
 
 ```
