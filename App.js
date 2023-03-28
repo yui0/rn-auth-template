@@ -26,39 +26,14 @@ function HomeScreen() {
   const { signOut } = React.useContext(AuthContext);
 
   return (
-    <View>
-      <Text>Signed in!</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </View>
-  );
-}
-function Profile() {
-  const { signOut } = React.useContext(AuthContext);
-
-  return (
-    <View>
-      <Text>Profile</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </View>
-  );
-}
-function About() {
-  const { signOut } = React.useContext(AuthContext);
-
-  return (
-    <View>
-      <Text>Profile</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </View>
-  );
-}
-function Contact() {
-  const { signOut } = React.useContext(AuthContext);
-
-  return (
-    <View>
-      <Text>Profile</Text>
-      <Button title="Sign out" onPress={signOut} />
+    <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
+      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+      <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
+      <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Let's start!</Text>
+      <Text style={{ marginBottom:12 }}>Your amazing app starts here. Open you favorite code editor and start editing this project.</Text>
+      <View style={{ width:'100%' }}>
+        <Button title="SIGN OUT" onPress={signOut} style={{ marginTop: 24 }} />
+      </View>
     </View>
   );
 }
@@ -127,15 +102,123 @@ export function passwordValidator(password) {
   if (password.length < 5) return 'Password must be at least 5 characters long.'
   return ''
 }
-function SignInScreen() {
+function ResetPasswordScreen({ navigation }) {
+  const [email, setEmail] = React.useState({ value: '', error: '' });
+
+  const sendResetPasswordEmail = () => {
+    const emailError = emailValidator(email.value);
+    if (emailError) {
+      setEmail({ ...email, error: emailError });
+      return;
+    }
+    navigation.navigate('LoginScreen');
+  }
+
+  return (
+    <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
+      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+      <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
+      <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Restore Password</Text>
+      <TextInput
+        placeholder="E-mail address"
+        returnKeyType="done"
+        value={email.value}
+        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        error={!!email.error}
+        errorText={email.error}
+        autoCapitalize="none"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+        description="You will receive email with password reset link."
+        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+      />
+      <View style={{ width:'100%' }}>
+        <Button title="Send Instructions" onPress={sendResetPasswordEmail} style={{ marginTop: 16 }} />
+      </View>
+    </View>
+  )
+}
+function RegisterScreen({ navigation }) {
+  const [name, setName] = React.useState({ value: '', error: '' })
+  const [email, setEmail] = React.useState({ value: '', error: '' })
+  const [password, setPassword] = React.useState({ value: '', error: '' })
+
+  const onSignUpPressed = () => {
+    const nameError = nameValidator(name.value);
+    const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
+    if (emailError || passwordError || nameError) {
+      setName({ ...name, error: nameError });
+      setEmail({ ...email, error: emailError });
+      setPassword({ ...password, error: passwordError });
+      return;
+    }
+    navigation.reset({
+      index: 0,
+      //routes: [{ name: 'Dashboard' }],
+      routes: [{ name: 'LoginScreen' }],
+    });
+  }
+
+  return (
+    <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
+      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+      <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
+      <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Create Account</Text>
+      <TextInput
+        placeholder="Name"
+        returnKeyType="next"
+        value={name.value}
+        onChangeText={(text) => setName({ value: text, error: '' })}
+        error={!!name.error}
+        errorText={name.error}
+        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+      />
+      <TextInput
+        placeholder="Email"
+        returnKeyType="next"
+        value={email.value}
+        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        error={!!email.error}
+        errorText={email.error}
+        autoCapitalize="none"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+      />
+      <TextInput
+        placeholder="Password"
+        returnKeyType="done"
+        value={password.value}
+        onChangeText={(text) => setPassword({ value: text, error: '' })}
+        error={!!password.error}
+        errorText={password.error}
+        secureTextEntry
+        style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
+      />
+      <View style={{ width:'100%' }}>
+        <Button title="SIGN UP" onPress={onSignUpPressed} style={{ marginTop: 24 }} />
+      </View>
+      <View style={{ flexDirection:'row', marginTop:4 }}>
+        <Text>Already have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
+          <Text style={{ fontWeight:'bold' }}>Login</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+function LoginScreen({ navigation }) {
   const [email, setEmail] = React.useState({ value:'', error:'' })
   const [password, setPassword] = React.useState({ value:'', error:'' })
 
   const { signIn } = React.useContext(AuthContext);
 
   const onLoginPressed = () => {
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
+    const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
     /*if (emailError || passwordError) {
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
@@ -181,7 +264,9 @@ function SignInScreen() {
           <Text style={{ fontSize:13 }}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
-      <Button mode="contained" onPress={onLoginPressed} title="LOGIN" style={{ width:"100%" }} />
+      <View style={{ width:'100%' }}>
+        <Button mode="contained" onPress={onLoginPressed} title="LOGIN" />
+      </View>
       <View style={{ flexDirection:'row', marginTop:4 }}>
         <Text>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
@@ -194,38 +279,6 @@ function SignInScreen() {
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const screenOptionStyle = {
-  headerStyle: {
-    backgroundColor: "#9AC4F8",
-  },
-  headerTintColor: "white",
-  headerBackTitle: "Back",
-};
-
-const MainStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="About" component={About} />
-    </Stack.Navigator>
-  );
-};
-
-const ContactStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Contact" component={Contact} />
-    </Stack.Navigator>
-  );
-};
-const BottomTabNavigator = () => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={MainStackNavigator} />
-      <Tab.Screen name="Contact" component={ContactStackNavigator} />
-    </Tab.Navigator>
-  );
-}
 
 export default function App({ navigation }) {
   const [state, dispatch] = React.useReducer(
@@ -313,16 +366,16 @@ export default function App({ navigation }) {
           </Stack.Navigator>
         ) : state.userToken == null ? (
           // No token found, user isn't signed in
-          <Stack.Navigator>
-            <Stack.Screen
-              name="SignIn"
-              component={SignInScreen}
+        <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown:false}}>
+            <Stack.Screen name="LoginScreen" component={LoginScreen}
               options={{
                 title: 'Sign in',
                 // When logging out, a pop animation feels intuitive
                 animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
             />
+            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+            <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
           </Stack.Navigator>
         ) : (
           // User is signed in
