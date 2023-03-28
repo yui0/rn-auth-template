@@ -393,8 +393,8 @@ export default function App({ navigation }) {
   const createScreenOptions = ({ route }) => {
       const iconName = TAB_ICON[route.name];
       return {
-          activeTintColor: 'tomato',//FIXME
-          inactiveTintColor: 'gray',//FIXME
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray",
           tabBarIcon: ({ size, color }) => (
               <Ionicons name={iconName} size={size} color={color} />
           )
