@@ -25,10 +25,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crypto from 'crypto-js';
 import axios from 'axios';
 //import Icon from 'react-native-vector-icons/FontAwesome';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
+
+const crypto_phrase = 'passphrase';
 
 //const theme = require('./theme-orange.json');
 const color_primary_100 = "#FFECD2";
@@ -382,9 +385,9 @@ export default function App({ navigation }) {
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
-        userToken = await AsyncStorage.getItem('userToken');
-
-        dispatch({ type:'RESTORE_TOKEN', token:userToken });
+        const ecryptedData = await AsyncStorage.getItem('userToken');
+        const decrypted = crypto.AES.decrypt(ecryptedData, crypto_phrase);
+        userToken = decrypted.toString(crypto.enc.Utf8);
       } catch (e) {
         // Restoring token failed
       }
@@ -393,7 +396,7 @@ export default function App({ navigation }) {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      //dispatch({ type:'RESTORE_TOKEN', token:userToken });
+      dispatch({ type:'RESTORE_TOKEN', token:userToken });
     };
 
     bootstrapAsync();
@@ -420,7 +423,7 @@ export default function App({ navigation }) {
           //console.log(response);
           if (response.status === 200) {
             try {
-              AsyncStorage.setItem('userToken', response.data.token);
+              AsyncStorage.setItem('userToken', crypto.AES.encrypt(response.data.token, crypto_phrase).toString());
             } catch (error) {
               console.log(error);
             }
