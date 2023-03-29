@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   Alert,
-  Button,
+  //Button,
   Image,
   KeyboardAvoidingView,
   Pressable,
@@ -93,7 +93,7 @@ function HomeScreen() {
       <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Let's start!</Text>
       <Text style={{ marginBottom:12 }}>Your amazing app starts here. Open your favorite code editor and start editing this project.</Text>
       <View style={{ width:'100%' }}>
-        <Button title="SIGN OUT" onPress={signOut} style={{ marginTop: 24 }} />
+        <CButton onPress={signOut} style={{ marginTop: 24 }}>SIGN OUT</CButton>
       </View>
     </View>
   );
@@ -195,7 +195,7 @@ function ResetPasswordScreen({ navigation }) {
           style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
         />
         <View style={{ width:'100%' }}>
-          <Button title="Send Instructions" onPress={sendResetPasswordEmail} style={{ marginTop: 16 }} />
+          <CButton onPress={sendResetPasswordEmail} style={{ marginTop: 16 }}>Send Instructions</CButton>
         </View>
       </View>
   )
@@ -263,7 +263,7 @@ function RegisterScreen({ navigation }) {
           style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
         />
         <View style={{ width:'100%' }}>
-          <Button title="SIGN UP" onPress={onSignUpPressed} style={{ marginTop: 24 }} />
+          <CButton onPress={onSignUpPressed} style={{ marginTop: 24 }}>SIGN UP</CButton>
         </View>
         <View style={{ flexDirection:'row', marginTop:4 }}>
           <Text>Already have an account? </Text>
@@ -329,7 +329,6 @@ function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={{ width:'100%' }}>
-          {/*<Button mode="contained" onPress={onLoginPressed} title="LOGIN" />*/}
           <CButton onPress={onLoginPressed}>LOGIN</CButton>
         </View>
         <View style={{ flexDirection:'row', marginTop:4 }}>
