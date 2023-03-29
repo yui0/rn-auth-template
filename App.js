@@ -299,7 +299,7 @@ function LoginScreen({ navigation }) {
   }
 
   return (
-      <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
+      <KeyboardAvoidingView behavior="padding" style={{ flex:1, padding:20, width:'100%', maxWidth:400,
         alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
         <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
         <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Welcome back!</Text>
@@ -340,7 +340,7 @@ function LoginScreen({ navigation }) {
             <Text style={{ fontWeight:'bold' }}>Sign up</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
   );
 }
 
