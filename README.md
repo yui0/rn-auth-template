@@ -1,10 +1,14 @@
 # rn-auth-template
 
-React Native Auth Template with Reqres
+React Native Authentication Template
 
 Email: eve.holt@reqres.in
 
 Password: cityslicka
+
+https://expo.dev/@yui.nakada/rn-auth-template?serviceType=classic&distribution=expo-go
+
+![expo](./expo-go.svg)
 
 # Features
 
@@ -13,7 +17,7 @@ Password: cityslicka
 * Async Storage
 * axios
 
-# How to use
+# How to build
 
 ```
 yarn
