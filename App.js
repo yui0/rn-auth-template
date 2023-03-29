@@ -382,6 +382,9 @@ export default function App({ navigation }) {
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
+        userToken = await AsyncStorage.getItem('userToken');
+
+        dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
         // Restoring token failed
       }
@@ -390,7 +393,7 @@ export default function App({ navigation }) {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      //dispatch({ type:'RESTORE_TOKEN', token:userToken });
     };
 
     bootstrapAsync();
@@ -404,6 +407,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
 
+        AsyncStorage.removeItem('userToken');
         //console.log(email);
         // eve.holt@reqres.in
         // cityslicka
@@ -415,6 +419,11 @@ export default function App({ navigation }) {
         .then((response) => {
           //console.log(response);
           if (response.status === 200) {
+            try {
+              AsyncStorage.setItem('userToken', response.data.token);
+            } catch (error) {
+              console.log(error);
+            }
             dispatch({ type:'SIGN_IN', token:response.data.token });
           } else {
             alert('Email or password is incorrect.');
@@ -426,7 +435,10 @@ export default function App({ navigation }) {
 
         //dispatch({ type:'SIGN_IN', token:'dummy-auth-token' });
       },
-      signOut: () => dispatch({ type:'SIGN_OUT' }),
+      signOut: () => {
+        AsyncStorage.removeItem('userToken');
+        dispatch({ type:'SIGN_OUT' });
+      },
       signUp: async (name, email, password) => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
