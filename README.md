@@ -21,6 +21,14 @@ yarn web
 expo publish
 ```
 
+# Screenshots
+
+![01](./screenshots/01.png)
+![02](./screenshots/02.png)
+![03](./screenshots/03.png)
+![04](./screenshots/04.png)
+
+
 # ref
 
 * https://reqres.in/
