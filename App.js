@@ -5,6 +5,7 @@ import {
   Button,
   Image,
   KeyboardAvoidingView,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -29,8 +30,59 @@ import axios from 'axios';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
 
+//const theme = require('./theme-orange.json');
+const color_primary_100 = "#FFECD2";
+const color_primary_400 = "#FF9758";
+
 const AuthContext = React.createContext();
 
+// Components
+interface CButtonProps {
+    children: React.ReactNode,
+    mode?: "flat" | "normal",
+    onPress: null,
+    style: ViewStyle,
+}
+function CButton({children, onPress, mode, style}: CButtonProps) {
+  const styles = StyleSheet.create({
+    button: {
+      borderRadius: 4,
+      padding: 8,
+      backgroundColor: color_primary_400,
+    },
+    flat: {
+      backgroundColor: 'transparent'
+    },
+    buttonText: {
+      color: 'white',
+      textAlign: 'center',
+    },
+    flatText: {
+      color: color_primary_400,
+    },
+    pressed: {
+      opacity: 0.75,
+      backgroundColor: color_primary_100,
+      borderRadius: 4,
+    },
+  });
+  return (
+    <View style={style}>
+      <Pressable
+          onPress={onPress}
+          style={({pressed}) => pressed && styles.pressed}
+      >
+        <View style={[styles.button, mode === 'flat' && styles.flat]}>
+          <Text style={[styles.buttonText, mode === 'flat' && styles.flatText]}>
+            {children}
+          </Text>
+        </View>
+      </Pressable>
+    </View>
+  );
+}
+
+// Landing page
 function HomeScreen() {
   const { signOut } = React.useContext(AuthContext);
 
@@ -124,7 +176,6 @@ function ResetPasswordScreen({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding">
       <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
         alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
         <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
@@ -147,7 +198,6 @@ function ResetPasswordScreen({ navigation }) {
           <Button title="Send Instructions" onPress={sendResetPasswordEmail} style={{ marginTop: 16 }} />
         </View>
       </View>
-    </KeyboardAvoidingView>
   )
 }
 function RegisterScreen({ navigation }) {
@@ -176,7 +226,6 @@ function RegisterScreen({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding">
       <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
         alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
         <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
@@ -223,7 +272,6 @@ function RegisterScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-    </KeyboardAvoidingView>
   );
 }
 function LoginScreen({ navigation }) {
@@ -248,7 +296,6 @@ function LoginScreen({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding">
       <View style={{ flex:1, padding:20, width:'100%', maxWidth:400,
         alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
         <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
@@ -282,7 +329,8 @@ function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={{ width:'100%' }}>
-          <Button mode="contained" onPress={onLoginPressed} title="LOGIN" />
+          {/*<Button mode="contained" onPress={onLoginPressed} title="LOGIN" />*/}
+          <CButton onPress={onLoginPressed}>LOGIN</CButton>
         </View>
         <View style={{ flexDirection:'row', marginTop:4 }}>
           <Text>Don’t have an account? </Text>
@@ -291,7 +339,6 @@ function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-    </KeyboardAvoidingView>
   );
 }
 
