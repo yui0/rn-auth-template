@@ -14,7 +14,7 @@ https://expo.dev/@yui.nakada/rn-auth-template?serviceType=classic&distribution=e
 
 * React Native
 * React Navigation
-* Async Storage
+* Async Storage with crypto-js
 * axios
 
 # How to build

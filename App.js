@@ -385,18 +385,23 @@ export default function App({ navigation }) {
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
-        const ecryptedData = await AsyncStorage.getItem('userToken');
+        userToken = await AsyncStorage.getItem('userToken');
+        /*const ecryptedData = await AsyncStorage.getItem('userToken');
         const decrypted = crypto.AES.decrypt(ecryptedData, crypto_phrase);
-        userToken = decrypted.toString(crypto.enc.Utf8);
+        userToken = decrypted.toString(crypto.enc.Utf8);*/
+        //alert(ecryptedData+' '+userToken);
+        console.log(ecryptedData+' '+userToken);
+        dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
         // Restoring token failed
+        dispatch({ type:'RESTORE_TOKEN', token:userToken });
       }
 
       // After restoring token, we may need to validate it in production apps
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch({ type:'RESTORE_TOKEN', token:userToken });
+      //dispatch({ type:'RESTORE_TOKEN', token:userToken });
     };
 
     bootstrapAsync();
@@ -423,7 +428,9 @@ export default function App({ navigation }) {
           //console.log(response);
           if (response.status === 200) {
             try {
-              AsyncStorage.setItem('userToken', crypto.AES.encrypt(response.data.token, crypto_phrase).toString());
+              AsyncStorage.setItem('userToken', response.data.token);
+              //console.log(crypto.AES.encrypt(response.data.token, crypto_phrase).toString()+' '+response.data.token);
+              //AsyncStorage.setItem('userToken', crypto.AES.encrypt(response.data.token, crypto_phrase).toString());
             } catch (error) {
               console.log(error);
             }
