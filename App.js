@@ -5,7 +5,9 @@ import {
   //Button,
   Image,
   KeyboardAvoidingView,
+  Linking,
   Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -23,8 +25,13 @@ import Animated, {
 import 'react-native-gesture-handler'; // for iOS, Android
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  createDrawerNavigator,
+    DrawerContentScrollView,
+    DrawerItemList,
+    DrawerItem,
+} from '@react-navigation/drawer';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -433,6 +440,30 @@ const SettingScreenStack = () => {
     </Stack.Navigator>
   );
 };
+const CustomSidebarMenu = (props) => {
+  const { signOut } = React.useContext(AuthContext);
+  return (
+    <SafeAreaView style={{ flex:1 }}>
+      <View style={{ marginTop:40 }}>
+        <Image
+          source={{ uri: 'https://berry-japan.com/images/apple-touch-icon.png' }}
+          style={{}}
+        />
+      </View>
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props}  />
+        <DrawerItem
+          label="About"
+          onPress={() => Linking.openURL('https://berry-japan.com')}
+        />
+        <DrawerItem
+          label="Sign Out"
+          onPress={() => signOut()}
+        />
+      </DrawerContentScrollView>
+    </SafeAreaView>
+  );
+};
 export default function App({ navigation }) {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -604,11 +635,16 @@ export default function App({ navigation }) {
         ) : (
           // User is signed in
           <Drawer.Navigator
+            drawerContent={(props) => <CustomSidebarMenu {...props} />}
             screenOptions={{
+              drawerType: "slide",
               headerStyle: {
                 backgroundColor: '#f4511e', // Set Header color
               },
               headerTintColor: '#fff', // Set Header text color
+              /*drawerContentOptions: {
+                activeTintColor: "#e91e63",
+              },*/
             }}>
             <Drawer.Screen
               name="HomeScreenStack"
