@@ -23,9 +23,12 @@ import Animated, {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { Ionicons } from '@expo/vector-icons';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crypto from 'crypto-js';
+//import crypto from 'crypto-js';
+import SimpleCrypto from "simple-crypto-js";
 import axios from 'axios';
 //import Icon from 'react-native-vector-icons/FontAwesome';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
@@ -72,8 +75,8 @@ function CButton({children, onPress, mode, style}: CButtonProps) {
   return (
     <View style={style}>
       <Pressable
-          onPress={onPress}
-          style={({pressed}) => pressed && styles.pressed}
+        onPress={onPress}
+        style={({pressed}) => pressed && styles.pressed}
       >
         <View style={[styles.button, mode === 'flat' && styles.flat]}>
           <Text style={[styles.buttonText, mode === 'flat' && styles.flatText]}>
@@ -385,15 +388,17 @@ export default function App({ navigation }) {
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
-        userToken = await AsyncStorage.getItem('userToken');
-        /*const ecryptedData = await AsyncStorage.getItem('userToken');
+        //userToken = await AsyncStorage.getItem('userToken');
+        const ecryptedData = await AsyncStorage.getItem('userToken');
+        console.log('ecryptedData: '+ecryptedData);
         const decrypted = crypto.AES.decrypt(ecryptedData, crypto_phrase);
-        userToken = decrypted.toString(crypto.enc.Utf8);*/
-        //alert(ecryptedData+' '+userToken);
-        console.log(ecryptedData+' '+userToken);
+        console.log('decrypted: '+decrypted);
+        userToken = decrypted.toString(crypto.enc.Utf8);
+        console.log('userToken: '+userToken);
         dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
         // Restoring token failed
+        console.log('Restoring token failed: '+userToken);
         dispatch({ type:'RESTORE_TOKEN', token:userToken });
       }
 
