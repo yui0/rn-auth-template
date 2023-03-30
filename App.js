@@ -20,8 +20,10 @@ import Animated, {
   cancelAnimation,
   Easing,
 } from 'react-native-reanimated';
+import 'react-native-gesture-handler'; // for iOS, Android
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Ionicons } from '@expo/vector-icons';
@@ -375,7 +377,44 @@ function LoginScreen({ navigation }) {
 }
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+const BottomTabStack = () => {
+  // https://ionic.io/ionicons
+  const TAB_ICON = {
+    Home: 'ios-home',
+    Splash: 'ios-snow',
+    Settings: 'ios-list',
+  };
+  const createScreenOptions = ({ route }) => {
+    const iconName = TAB_ICON[route.name];
+    return {
+      headerShown: false,
+      tabBarActiveTintColor: "tomato",
+      tabBarInactiveTintColor: "gray",
+      tabBarIcon: ({ size, color }) => (
+        <Ionicons name={iconName} size={size} color={color} />
+      )
+    };
+  };
+  return (
+    <Tab.Navigator initialRouteName="Home" screenOptions={createScreenOptions}>
+      <Tab.Screen name="Home" component={HomeScreen}
+        options={{
+          headerRight: () => (
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity style={{flex: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 10}}
+                onPress={() => authContext.signOut()} >
+                <Ionicons name="ios-log-out-outline" size={24} />
+              </TouchableOpacity>
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen name="Splash" component={SplashScreen} />
+    </Tab.Navigator>
+  );
+};
 export default function App({ navigation }) {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -523,23 +562,6 @@ export default function App({ navigation }) {
     []
   );
 
-  // https://ionic.io/ionicons
-  const TAB_ICON = {
-      Home: 'ios-home',
-      Splash: 'ios-snow',
-      Settings: 'ios-list',
-  };
-  const createScreenOptions = ({ route }) => {
-      const iconName = TAB_ICON[route.name];
-      return {
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "gray",
-          tabBarIcon: ({ size, color }) => (
-              <Ionicons name={iconName} size={size} color={color} />
-          )
-      };
-  };
-
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
@@ -563,21 +585,7 @@ export default function App({ navigation }) {
           </Stack.Navigator>
         ) : (
           // User is signed in
-          <Tab.Navigator initialRouteName="Home" screenOptions={createScreenOptions}>
-            <Tab.Screen name="Home" component={HomeScreen}
-              options={{
-                headerRight: () => (
-                  <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity style={{flex: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 10}}
-                      onPress={() => authContext.signOut()} >
-                      <Ionicons name="ios-log-out-outline" size={24} />
-                    </TouchableOpacity>
-                  </View>
-                )
-              }}
-            />
-            <Tab.Screen name="Splash" component={SplashScreen} />
-          </Tab.Navigator>
+          <BottomTabStack />
         )}
       </NavigationContainer>
     </AuthContext.Provider>

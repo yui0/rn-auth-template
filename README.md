@@ -14,12 +14,14 @@ https://expo.dev/@yui.nakada/rn-auth-template?serviceType=classic&distribution=e
 
 * React Native
 * React Navigation
-* Async Storage with crypto-js
+* Async Storage with [React Native CryptoJS](https://github.com/imchintan/react-native-crypto-js)
 * axios
 
 # How to build
 
 ```
+#ncu
+#ncu -u
 yarn
 yarn web
 expo publish
