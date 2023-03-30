@@ -415,6 +415,24 @@ const BottomTabStack = () => {
     </Tab.Navigator>
   );
 };
+const HomeScreenStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="HomeScreen"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="BottomTabStack" component={BottomTabStack} />
+    </Stack.Navigator>
+  );
+};
+const SettingScreenStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="SecondPage"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="SettingScreen" component={SplashScreen} />
+    </Stack.Navigator>
+  );
+};
 export default function App({ navigation }) {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -585,7 +603,30 @@ export default function App({ navigation }) {
           </Stack.Navigator>
         ) : (
           // User is signed in
-          <BottomTabStack />
+          <Drawer.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#f4511e', // Set Header color
+              },
+              headerTintColor: '#fff', // Set Header text color
+            }}>
+            <Drawer.Screen
+              name="HomeScreenStack"
+              options={{
+                drawerLabel: 'Home',
+                title: 'Home',
+              }}
+              component={HomeScreenStack}
+            />
+            <Drawer.Screen
+              name="SettingScreenStack"
+              options={{
+                drawerLabel: 'Setting',
+                title: 'Setting',
+              }}
+              component={SettingScreenStack}
+            />
+          </Drawer.Navigator>
         )}
       </NavigationContainer>
     </AuthContext.Provider>
