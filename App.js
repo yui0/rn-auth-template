@@ -408,14 +408,14 @@ const BottomTabStack = () => {
     <Tab.Navigator initialRouteName="Home" screenOptions={createScreenOptions}>
       <Tab.Screen name="Home" component={HomeScreen}
         options={{
-          headerRight: () => (
+          /*headerRight: () => (
             <View style={{flexDirection: 'row'}}>
               <TouchableOpacity style={{flex: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 10}}
                 onPress={() => authContext.signOut()} >
                 <Ionicons name="ios-log-out-outline" size={24} />
               </TouchableOpacity>
             </View>
-          )
+          )*/
         }}
       />
       <Tab.Screen name="Splash" component={SplashScreen} />
@@ -447,13 +447,14 @@ const CustomSidebarMenu = (props) => {
       <View style={{ marginTop:40 }}>
         <Image
           source={{ uri: 'https://berry-japan.com/images/apple-touch-icon.png' }}
-          style={{}}
+          style={{ width:32, height:32, resizeMode:'center', alignSelf:'center', borderRadius:100/2}}
         />
       </View>
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props}  />
         <DrawerItem
           label="About"
+          drawerIcon={({focused, color, size}) => <Icon color={color} size={size} name={focused ? 'ios-heart' : 'ios-heart-outline'} />}
           onPress={() => Linking.openURL('https://berry-japan.com')}
         />
         <DrawerItem
@@ -651,6 +652,7 @@ export default function App({ navigation }) {
               options={{
                 drawerLabel: 'Home',
                 title: 'Home',
+                drawerIcon: ({focused, color, size}) => (<Ionicons name="ios-home" size={size} color={color} />),
               }}
               component={HomeScreenStack}
             />
@@ -659,6 +661,7 @@ export default function App({ navigation }) {
               options={{
                 drawerLabel: 'Setting',
                 title: 'Setting',
+                drawerIcon: ({focused, color, size}) => (<Ionicons name="ios-snow" size={size} color={color} />),
               }}
               component={SettingScreenStack}
             />
