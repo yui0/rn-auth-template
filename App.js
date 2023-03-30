@@ -28,19 +28,46 @@ import { Ionicons } from '@expo/vector-icons';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import crypto from 'crypto-js';
-import SimpleCrypto from "simple-crypto-js";
+//import SimpleCrypto from "simple-crypto-js";
+//import Crypto from 'react-native-quick-crypto';
+import CryptoJS from "react-native-crypto-js";
 import axios from 'axios';
 //import Icon from 'react-native-vector-icons/FontAwesome';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
 
-const crypto_phrase = 'passphrase';
+const secretKey = "some-unique-key";
+//const simpleCrypto = new SimpleCrypto(secretKey);
 
 //const theme = require('./theme-orange.json');
 const color_primary_100 = "#FFECD2";
 const color_primary_400 = "#FF9758";
 
 const AuthContext = React.createContext();
+
+/*async function aesEncrypt(key, data) {
+  const aes = {
+    name: "AES-GCM",
+    iv: crypto.getRandomValues(new Uint8Array(16)),
+    tagLength: 128
+  };
+
+  const result = await crypto.subtle.encrypt(aes, key, data);
+
+  const buffer = new Uint8Array(aes.iv.byteLength + result.byteLength);
+  buffer.set(aes.iv, 0);
+  buffer.set(new Uint8Array(result), aes.iv.byteLength);
+
+  return buffer;
+}
+async function aesDecrypt(key, data) {
+  const aes = {
+    name: "AES-GCM",
+    iv: data.subarray(0, 16),
+    tagLength: 128
+  };
+  return new Uint8Array(await crypto.subtle.decrypt(aes, key, data.subarray(16)));
+}*/
 
 // Components
 interface CButtonProps {
@@ -389,11 +416,21 @@ export default function App({ navigation }) {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
         //userToken = await AsyncStorage.getItem('userToken');
-        const ecryptedData = await AsyncStorage.getItem('userToken');
+        /*const ecryptedData = await AsyncStorage.getItem('userToken');
         console.log('ecryptedData: '+ecryptedData);
         const decrypted = crypto.AES.decrypt(ecryptedData, crypto_phrase);
         console.log('decrypted: '+decrypted);
         userToken = decrypted.toString(crypto.enc.Utf8);
+        console.log('userToken: '+userToken);*/
+        const ecryptedData = await AsyncStorage.getItem('userToken');
+        console.log('ecryptedData: '+ecryptedData);
+        //userToken = simpleCrypto.decrypt(ecryptedData);
+        //userToken = await aesDecrypt(secretKey, ecryptedData);
+        /*const decipher = Crypto.createDecipher('aes192', secretKey);
+        let txt = decipher.update(ecryptedData, 'hex', 'utf-8');
+        txt += decipher.final('utf-8');
+        userToken = txt;*/
+        userToken = CryptoJS.AES.decrypt(ecryptedData, secretKey).toString(CryptoJS.enc.Utf8);
         console.log('userToken: '+userToken);
         dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
@@ -433,9 +470,11 @@ export default function App({ navigation }) {
           //console.log(response);
           if (response.status === 200) {
             try {
-              AsyncStorage.setItem('userToken', response.data.token);
+              //AsyncStorage.setItem('userToken', response.data.token);
               //console.log(crypto.AES.encrypt(response.data.token, crypto_phrase).toString()+' '+response.data.token);
               //AsyncStorage.setItem('userToken', crypto.AES.encrypt(response.data.token, crypto_phrase).toString());
+              console.log(CryptoJS.AES.encrypt(response.data.token, secretKey).toString()+' '+response.data.token);
+              AsyncStorage.setItem('userToken', CryptoJS.AES.encrypt(response.data.token, secretKey).toString());
             } catch (error) {
               console.log(error);
             }
