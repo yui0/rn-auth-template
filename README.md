@@ -16,6 +16,7 @@ https://expo.dev/@yui.nakada/rn-auth-template?serviceType=classic&distribution=e
 * React Navigation
 * Async Storage with [React Native CryptoJS](https://github.com/imchintan/react-native-crypto-js)
 * axios
+* Support UI Kitten theme
 
 # How to build
 
@@ -39,4 +40,5 @@ expo publish
 
 * https://reqres.in/
 * https://github.com/venits/react-native-login-template
+* https://colors.eva.design/
 

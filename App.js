@@ -2,7 +2,6 @@
 import * as React from 'react';
 import {
   Alert,
-  //Button,
   Image,
   KeyboardAvoidingView,
   Linking,
@@ -28,29 +27,24 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   createDrawerNavigator,
-    DrawerContentScrollView,
-    DrawerItemList,
-    DrawerItem,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
 } from '@react-navigation/drawer';
 
 import { Ionicons } from '@expo/vector-icons';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import crypto from 'crypto-js';
-//import SimpleCrypto from "simple-crypto-js";
 //import Crypto from 'react-native-quick-crypto';
 import CryptoJS from "react-native-crypto-js";
 import axios from 'axios';
-//import Icon from 'react-native-vector-icons/FontAwesome';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
 
 const secretKey = "some-unique-key";
-//const simpleCrypto = new SimpleCrypto(secretKey);
 
-//const theme = require('./theme-orange.json');
-const color_primary_100 = "#FFECD2";
-const color_primary_400 = "#FF9758";
+// https://colors.eva.design/
+const theme = require('./theme-orange.json');
 
 const AuthContext = React.createContext();
 
@@ -90,7 +84,7 @@ function CButton({children, onPress, mode, style}: CButtonProps) {
     button: {
       borderRadius: 4,
       padding: 8,
-      backgroundColor: color_primary_400,
+      backgroundColor: theme['color-primary-500'],
     },
     flat: {
       backgroundColor: 'transparent'
@@ -100,11 +94,11 @@ function CButton({children, onPress, mode, style}: CButtonProps) {
       textAlign: 'center',
     },
     flatText: {
-      color: color_primary_400,
+      color: theme['color-primary-500'],
     },
     pressed: {
       opacity: 0.75,
-      backgroundColor: color_primary_100,
+      backgroundColor: theme['color-primary-100'],
       borderRadius: 4,
     },
   });
@@ -176,10 +170,10 @@ function SplashScreen() {
       width: 60,
       borderRadius: 30,
       borderWidth: 7,
-      borderTopColor: '#f5f5f5',
-      borderRightColor: '#f5f5f5',
-      borderBottomColor: '#f5f5f5',
-      borderLeftColor: 'blue',
+      borderTopColor: theme['color-primary-100'],
+      borderRightColor: theme['color-primary-100'],
+      borderBottomColor: theme['color-primary-100'],
+      borderLeftColor: theme['color-primary-500'],
     },
   });
 
@@ -397,8 +391,8 @@ const BottomTabStack = () => {
     const iconName = TAB_ICON[route.name];
     return {
       headerShown: false,
-      tabBarActiveTintColor: "tomato",
-      tabBarInactiveTintColor: "gray",
+      tabBarActiveTintColor: theme['color-primary-500'],
+      tabBarInactiveTintColor: theme['color-primary-300'],
       tabBarIcon: ({ size, color }) => (
         <Ionicons name={iconName} size={size} color={color} />
       )
@@ -406,18 +400,7 @@ const BottomTabStack = () => {
   };
   return (
     <Tab.Navigator initialRouteName="Home" screenOptions={createScreenOptions}>
-      <Tab.Screen name="Home" component={HomeScreen}
-        options={{
-          /*headerRight: () => (
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity style={{flex: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 10}}
-                onPress={() => authContext.signOut()} >
-                <Ionicons name="ios-log-out-outline" size={24} />
-              </TouchableOpacity>
-            </View>
-          )*/
-        }}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Splash" component={SplashScreen} />
     </Tab.Navigator>
   );
@@ -505,15 +488,8 @@ export default function App({ navigation }) {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
         //userToken = await AsyncStorage.getItem('userToken');
-        /*const ecryptedData = await AsyncStorage.getItem('userToken');
-        console.log('ecryptedData: '+ecryptedData);
-        const decrypted = crypto.AES.decrypt(ecryptedData, crypto_phrase);
-        console.log('decrypted: '+decrypted);
-        userToken = decrypted.toString(crypto.enc.Utf8);
-        console.log('userToken: '+userToken);*/
         const ecryptedData = await AsyncStorage.getItem('userToken');
         console.log('ecryptedData: '+ecryptedData);
-        //userToken = simpleCrypto.decrypt(ecryptedData);
         //userToken = await aesDecrypt(secretKey, ecryptedData);
         /*const decipher = Crypto.createDecipher('aes192', secretKey);
         let txt = decipher.update(ecryptedData, 'hex', 'utf-8');
@@ -640,7 +616,7 @@ export default function App({ navigation }) {
             screenOptions={{
               drawerType: "slide",
               headerStyle: {
-                backgroundColor: '#f4511e', // Set Header color
+                backgroundColor: theme['color-primary-500'], // Set Header color
               },
               headerTintColor: '#fff', // Set Header text color
               /*drawerContentOptions: {
