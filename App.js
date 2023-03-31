@@ -32,6 +32,7 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 
+// https://ionic.io/ionicons
 import { Ionicons } from '@expo/vector-icons';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,11 +42,11 @@ import axios from 'axios';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
 
-const secretKey = "some-unique-key";
-
 // https://colors.eva.design/
 const theme = require('./theme-orange.json');
 
+// for Authentication
+const secretKey = "some-unique-key";
 const AuthContext = React.createContext();
 
 /*async function aesEncrypt(key, data) {
@@ -427,7 +428,7 @@ const CustomSidebarMenu = (props) => {
   const { signOut } = React.useContext(AuthContext);
   return (
     <SafeAreaView style={{ flex:1 }}>
-      <View style={{ marginTop:40 }}>
+      <View style={{ marginTop:40, marginBottom:20 }}>
         <Image
           source={require('./assets/apple-touch-icon.png')}
           style={{ width:32, height:32, resizeMode:'center', alignSelf:'center', borderRadius:100/2}}

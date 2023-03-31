@@ -39,6 +39,8 @@ expo publish
 # ref
 
 * https://reqres.in/
+* https://github.com/Anshul-Sonpure/API-Testing-using-Python
 * https://github.com/venits/react-native-login-template
 * https://colors.eva.design/
+* http://wiz-code.digick.jp/ajax/ajax-login-demo.html
 
