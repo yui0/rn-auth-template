@@ -429,7 +429,7 @@ const CustomSidebarMenu = (props) => {
     <SafeAreaView style={{ flex:1 }}>
       <View style={{ marginTop:40 }}>
         <Image
-          source={{ uri: 'https://berry-japan.com/images/apple-touch-icon.png' }}
+          source={require('./assets/apple-touch-icon.png')}
           style={{ width:32, height:32, resizeMode:'center', alignSelf:'center', borderRadius:100/2}}
         />
       </View>
@@ -437,11 +437,12 @@ const CustomSidebarMenu = (props) => {
         <DrawerItemList {...props}  />
         <DrawerItem
           label="About"
-          drawerIcon={({focused, color, size}) => <Icon color={color} size={size} name={focused ? 'ios-heart' : 'ios-heart-outline'} />}
+          icon={({focused, color, size}) => <Ionicons color={color} size={size} name={focused ? 'heart' : 'heart-outline'} /> }
           onPress={() => Linking.openURL('https://berry-japan.com')}
         />
         <DrawerItem
           label="Sign Out"
+          icon={({focused, color, size}) => <Ionicons color={color} size={size} name={focused ? 'log-out' : 'log-out-outline'} /> }
           onPress={() => signOut()}
         />
       </DrawerContentScrollView>
@@ -619,9 +620,7 @@ export default function App({ navigation }) {
                 backgroundColor: theme['color-primary-500'], // Set Header color
               },
               headerTintColor: '#fff', // Set Header text color
-              /*drawerContentOptions: {
-                activeTintColor: "#e91e63",
-              },*/
+              drawerActiveTintColor: theme['color-primary-500']
             }}>
             <Drawer.Screen
               name="HomeScreenStack"
