@@ -46,8 +46,16 @@ import axios from 'axios';
 const theme = require('./theme-orange.json');
 
 // for Authentication
-const secretKey = "some-unique-key";
 const AuthContext = React.createContext();
+const secretKey = "some-unique-key";
+
+async function getItem(key) {
+  const ecryptedData = await AsyncStorage.getItem(key);
+  return CryptoJS.AES.decrypt(ecryptedData, secretKey).toString(CryptoJS.enc.Utf8);
+}
+async function setItem(key, value) {
+  await AsyncStorage.setItem(key, CryptoJS.AES.encrypt(value, secretKey).toString());
+}
 
 /*async function aesEncrypt(key, data) {
   const aes = {
@@ -490,15 +498,16 @@ export default function App({ navigation }) {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
         //userToken = await AsyncStorage.getItem('userToken');
-        const ecryptedData = await AsyncStorage.getItem('userToken');
+        userToken = await getItem('userToken');
+        /*const ecryptedData = await AsyncStorage.getItem('userToken');
         console.log('ecryptedData: '+ecryptedData);
         //userToken = await aesDecrypt(secretKey, ecryptedData);
-        /*const decipher = Crypto.createDecipher('aes192', secretKey);
+        *//*const decipher = Crypto.createDecipher('aes192', secretKey);
         let txt = decipher.update(ecryptedData, 'hex', 'utf-8');
         txt += decipher.final('utf-8');
         userToken = txt;*/
-        userToken = CryptoJS.AES.decrypt(ecryptedData, secretKey).toString(CryptoJS.enc.Utf8);
-        console.log('userToken: '+userToken);
+        /*userToken = CryptoJS.AES.decrypt(ecryptedData, secretKey).toString(CryptoJS.enc.Utf8);
+        console.log('userToken: '+userToken);*/
         dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
         // Restoring token failed
@@ -540,8 +549,9 @@ export default function App({ navigation }) {
               //AsyncStorage.setItem('userToken', response.data.token);
               //console.log(crypto.AES.encrypt(response.data.token, crypto_phrase).toString()+' '+response.data.token);
               //AsyncStorage.setItem('userToken', crypto.AES.encrypt(response.data.token, crypto_phrase).toString());
-              console.log(CryptoJS.AES.encrypt(response.data.token, secretKey).toString()+' '+response.data.token);
-              AsyncStorage.setItem('userToken', CryptoJS.AES.encrypt(response.data.token, secretKey).toString());
+              /*console.log(CryptoJS.AES.encrypt(response.data.token, secretKey).toString()+' '+response.data.token);
+              AsyncStorage.setItem('userToken', CryptoJS.AES.encrypt(response.data.token, secretKey).toString());*/
+              setItem('userToken', response.data.token);
             } catch (error) {
               console.log(error);
             }
