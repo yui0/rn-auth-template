@@ -1,5 +1,11 @@
 # rn-auth-template
 
+![GitHub Repo stars](https://img.shields.io/github/stars/yui0/rn-auth-template?style=social)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/yui0/rn-auth-template)
+![Lines of code](https://img.shields.io/tokei/lines/github/yui0/rn-auth-template)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/yui0/rn-auth-template)](https://github.com/yui0/rn-auth-template/releases)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+
 React Native Authentication Template
 
 Email: eve.holt@reqres.in

@@ -538,19 +538,15 @@ export default function App({ navigation }) {
         // eve.holt@reqres.in
         // cityslicka
         const ENDPOINT = 'https://reqres.in/api/login';
+        //const ENDPOINT = 'https://berry0.shop/api.php/login';
         axios.post(ENDPOINT, {
           email: email,
+          user: email, // for berry
           password: password
-        })
-        .then((response) => {
+        }).then((response) => {
           //console.log(response);
           if (response.status === 200) {
             try {
-              //AsyncStorage.setItem('userToken', response.data.token);
-              //console.log(crypto.AES.encrypt(response.data.token, crypto_phrase).toString()+' '+response.data.token);
-              //AsyncStorage.setItem('userToken', crypto.AES.encrypt(response.data.token, crypto_phrase).toString());
-              /*console.log(CryptoJS.AES.encrypt(response.data.token, secretKey).toString()+' '+response.data.token);
-              AsyncStorage.setItem('userToken', CryptoJS.AES.encrypt(response.data.token, secretKey).toString());*/
               setItem('userToken', response.data.token);
             } catch (error) {
               console.log(error);
@@ -559,8 +555,7 @@ export default function App({ navigation }) {
           } else {
             alert('Email or password is incorrect.');
           }
-        })
-        .catch((error) => {
+        }).catch((error) => {
           alert('Email or password is incorrect. [eve.holt@reqres.in / cityslicka]');
         });
 
