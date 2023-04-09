@@ -1,4 +1,4 @@
-# rn-auth-template
+# RN-AUTH-TEMPLATE
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/yui0/rn-auth-template?style=social)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/yui0/rn-auth-template)
@@ -8,13 +8,15 @@
 
 React Native Authentication Template
 
-Email: eve.holt@reqres.in
-
-Password: cityslicka
+You can try this from this.
 
 https://expo.dev/@yui.nakada/rn-auth-template?serviceType=classic&distribution=expo-go
 
 ![expo](./expo-go.svg)
+
+Email: eve.holt@reqres.in
+
+Password: cityslicka
 
 # Features
 
@@ -40,7 +42,6 @@ expo publish
 ![02](./screenshots/02.png)
 ![03](./screenshots/03.png)
 ![04](./screenshots/04.png)
-
 
 # ref
 
