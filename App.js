@@ -36,7 +36,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import Crypto from 'react-native-quick-crypto';
 import CryptoJS from "react-native-crypto-js";
 import axios from 'axios';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
@@ -57,29 +56,16 @@ async function setItem(key, value) {
   await AsyncStorage.setItem(key, CryptoJS.AES.encrypt(value, secretKey).toString());
 }
 
-/*async function aesEncrypt(key, data) {
-  const aes = {
-    name: "AES-GCM",
-    iv: crypto.getRandomValues(new Uint8Array(16)),
-    tagLength: 128
-  };
-
-  const result = await crypto.subtle.encrypt(aes, key, data);
-
-  const buffer = new Uint8Array(aes.iv.byteLength + result.byteLength);
-  buffer.set(aes.iv, 0);
-  buffer.set(new Uint8Array(result), aes.iv.byteLength);
-
-  return buffer;
-}
-async function aesDecrypt(key, data) {
-  const aes = {
-    name: "AES-GCM",
-    iv: data.subarray(0, 16),
-    tagLength: 128
-  };
-  return new Uint8Array(await crypto.subtle.decrypt(aes, key, data.subarray(16)));
-}*/
+var api = axios.create({
+  baseURL: 'https://berry0.shop/api.php',
+  withCredentials: true
+});
+api.interceptors.response.use(function (response) {
+  if (response.headers['x-xsrf-token']) {
+    document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
+  }
+  return response;
+});
 
 // Components
 interface CButtonProps {
@@ -548,8 +534,13 @@ export default function App({ navigation }) {
           if (response.status === 200) {
             try {
               setItem('userToken', response.data.token);
-            } catch (error) {
-              console.log(error);
+              /*api.post('/', {token:response.data.token}).then(function (response) {
+              }).catch(function (e) {
+                console.log(e);
+              });*/
+              //setItem('AUTH-TOKEN', response.data.token);
+            } catch (e) {
+              console.log(e);
             }
             dispatch({ type:'SIGN_IN', token:response.data.token });
           } else {
