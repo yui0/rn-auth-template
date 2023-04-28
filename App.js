@@ -32,6 +32,11 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 
+import { Button } from './Components';
+
+// https://colors.eva.design/
+const theme = require('./theme-orange.json');
+
 // https://ionic.io/ionicons
 import { Ionicons } from '@expo/vector-icons';
 
@@ -40,9 +45,6 @@ import CryptoJS from "react-native-crypto-js";
 import axios from 'axios';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
-
-// https://colors.eva.design/
-const theme = require('./theme-orange.json');
 
 // for Authentication
 const AuthContext = React.createContext();
@@ -56,7 +58,7 @@ async function setItem(key, value) {
   await AsyncStorage.setItem(key, CryptoJS.AES.encrypt(value, secretKey).toString());
 }
 
-var api = axios.create({
+/*var api = axios.create({
   baseURL: 'https://berry0.shop/api.php',
   withCredentials: true
 });
@@ -65,53 +67,7 @@ api.interceptors.response.use(function (response) {
     document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
   }
   return response;
-});
-
-// Components
-interface CButtonProps {
-    children: React.ReactNode,
-    mode?: "flat" | "normal",
-    onPress: null,
-    style: ViewStyle,
-}
-function CButton({children, onPress, mode, style}: CButtonProps) {
-  const styles = StyleSheet.create({
-    button: {
-      borderRadius: 4,
-      padding: 8,
-      backgroundColor: theme['color-primary-500'],
-    },
-    flat: {
-      backgroundColor: 'transparent'
-    },
-    buttonText: {
-      color: 'white',
-      textAlign: 'center',
-    },
-    flatText: {
-      color: theme['color-primary-500'],
-    },
-    pressed: {
-      opacity: 0.75,
-      backgroundColor: theme['color-primary-100'],
-      borderRadius: 4,
-    },
-  });
-  return (
-    <View style={style}>
-      <Pressable
-        onPress={onPress}
-        style={({pressed}) => pressed && styles.pressed}
-      >
-        <View style={[styles.button, mode === 'flat' && styles.flat]}>
-          <Text style={[styles.buttonText, mode === 'flat' && styles.flatText]}>
-            {children}
-          </Text>
-        </View>
-      </Pressable>
-    </View>
-  );
-}
+});*/
 
 // Landing page
 function HomeScreen() {
@@ -124,7 +80,7 @@ function HomeScreen() {
       <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Let's start!</Text>
       <Text style={{ marginBottom:12 }}>Your amazing app starts here. Open your favorite code editor and start editing this project.</Text>
       <View style={{ width:'100%' }}>
-        <CButton onPress={signOut} style={{ marginTop: 24 }}>SIGN OUT</CButton>
+        <Button onPress={signOut} style={{ marginTop: 24 }}>SIGN OUT</Button>
       </View>
     </View>
   );
@@ -226,7 +182,13 @@ function ResetPasswordScreen({ navigation }) {
         style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
       />
       <View style={{ width:'100%' }}>
-        <CButton onPress={sendResetPasswordEmail} style={{ marginTop: 16 }}>Send Instructions</CButton>
+        <Button onPress={sendResetPasswordEmail} style={{ marginTop: 16 }}>Send Instructions</Button>
+      </View>
+      <View style={{ flexDirection:'row', marginTop:4 }}>
+        <Text>Back to Login Screen? </Text>
+        <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
+          <Text style={{ fontWeight:'bold' }}>Login</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   )
@@ -294,7 +256,7 @@ function RegisterScreen({ navigation }) {
         style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
       />
       <View style={{ width:'100%' }}>
-        <CButton onPress={onSignUpPressed} style={{ marginTop: 24 }}>SIGN UP</CButton>
+        <Button onPress={onSignUpPressed} style={{ marginTop: 24 }}>SIGN UP</Button>
       </View>
       <View style={{ flexDirection:'row', marginTop:4 }}>
         <Text>Already have an account? </Text>
@@ -360,7 +322,7 @@ function LoginScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={{ width:'100%' }}>
-        <CButton onPress={onLoginPressed}>LOGIN</CButton>
+        <Button onPress={onLoginPressed}>LOGIN</Button>
       </View>
       <View style={{ flexDirection:'row', marginTop:4 }}>
         <Text>Don’t have an account? </Text>
@@ -485,15 +447,6 @@ export default function App({ navigation }) {
         // userToken = await SecureStore.getItemAsync('userToken');
         //userToken = await AsyncStorage.getItem('userToken');
         userToken = await getItem('userToken');
-        /*const ecryptedData = await AsyncStorage.getItem('userToken');
-        console.log('ecryptedData: '+ecryptedData);
-        //userToken = await aesDecrypt(secretKey, ecryptedData);
-        *//*const decipher = Crypto.createDecipher('aes192', secretKey);
-        let txt = decipher.update(ecryptedData, 'hex', 'utf-8');
-        txt += decipher.final('utf-8');
-        userToken = txt;*/
-        /*userToken = CryptoJS.AES.decrypt(ecryptedData, secretKey).toString(CryptoJS.enc.Utf8);
-        console.log('userToken: '+userToken);*/
         dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
         // Restoring token failed
