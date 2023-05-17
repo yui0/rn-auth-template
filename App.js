@@ -48,6 +48,8 @@ import axios from 'axios';
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
 
+import { LicenseScreen } from './LicenseScreen';
+
 // for Authentication
 const AuthContext = React.createContext();
 const secretKey = "some-unique-key";
@@ -591,6 +593,15 @@ export default function App({ navigation }) {
                 drawerIcon: ({focused, color, size}) => (<Ionicons name="ios-snow" size={size} color={color} />),
               }}
               component={SettingScreenStack}
+            />
+            <Drawer.Screen
+              name="LicenseScreen"
+              options={{
+                drawerLabel: 'License',
+                title: 'License',
+                drawerIcon: ({focused, color, size}) => (<Ionicons name="ios-document-text" size={size} color={color} />),
+              }}
+              component={LicenseScreen}
             />
           </Drawer.Navigator>
         )}
