@@ -9,7 +9,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -32,7 +31,10 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 
-import { Button } from './Components';
+import {
+  Button,
+  Input,
+} from './Components';
 
 // https://colors.eva.design/
 const theme = require('./theme-orange.json');
@@ -151,12 +153,12 @@ export function passwordValidator(password) {
   return ''
 }
 function ResetPasswordScreen({ navigation }) {
-  const [email, setEmail] = React.useState({ value: '', error: '' });
+  const [email, setEmail] = React.useState({ value:'', error:'' });
 
   const sendResetPasswordEmail = () => {
     const emailError = emailValidator(email.value);
     if (emailError) {
-      setEmail({ ...email, error: emailError });
+      setEmail({ ...email, error:emailError });
       return;
     }
     navigation.navigate('LoginScreen');
@@ -167,11 +169,11 @@ function ResetPasswordScreen({ navigation }) {
       alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
       <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
       <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Restore Password</Text>
-      <TextInput
-        placeholder="E-mail address"
+      <Input
+        placeholder="E-mail"
         returnKeyType="done"
         value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value:text, error:'' })}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -223,7 +225,7 @@ function RegisterScreen({ navigation }) {
       alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
       <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
       <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Create Account</Text>
-      <TextInput
+      <Input
         placeholder="Name"
         returnKeyType="next"
         value={name.value}
@@ -232,7 +234,7 @@ function RegisterScreen({ navigation }) {
         errorText={name.error}
         style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
       />
-      <TextInput
+      <Input
         placeholder="Email"
         returnKeyType="next"
         value={email.value}
@@ -245,7 +247,7 @@ function RegisterScreen({ navigation }) {
         keyboardType="email-address"
         style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
       />
-      <TextInput
+      <Input
         placeholder="Password"
         returnKeyType="done"
         value={password.value}
@@ -293,7 +295,7 @@ function LoginScreen({ navigation }) {
       alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
       <Image source={require('./assets/icon.png')} style={{ width:256, height:256, marginBottom:8 }} />
       <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Welcome back!</Text>
-      <TextInput
+      <Input
         placeholder="Email"
         returnKeyType="next"
         value={email.value}
@@ -306,7 +308,7 @@ function LoginScreen({ navigation }) {
         keyboardType="email-address"
         style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
       />
-      <TextInput
+      <Input
         placeholder="Password"
         returnKeyType="done"
         value={password.value}
