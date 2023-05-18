@@ -84,7 +84,7 @@ function HomeScreen() {
       <Text style={{ fontSize:21, fontWeight:'bold', paddingVertical:12 }}>Let's start!</Text>
       <Text style={{ marginBottom:12 }}>Your amazing app starts here. Open your favorite code editor and start editing this project.</Text>
       <View style={{ width:'100%' }}>
-        <Button onPress={signOut} style={{ marginTop: 24 }}>SIGN OUT</Button>
+        <Button onPress={signOut} style={{ marginTop:24 }}>SIGN OUT</Button>
       </View>
     </View>
   );
@@ -186,7 +186,7 @@ function ResetPasswordScreen({ navigation }) {
         style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
       />
       <View style={{ width:'100%' }}>
-        <Button onPress={sendResetPasswordEmail} style={{ marginTop: 16 }}>Send Instructions</Button>
+        <Button onPress={sendResetPasswordEmail} style={{ marginTop:16 }}>Send Instructions</Button>
       </View>
       <View style={{ flexDirection:'row', marginTop:4 }}>
         <Text>Back to Login Screen? </Text>
@@ -240,7 +240,7 @@ function RegisterScreen({ navigation }) {
         placeholder="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value:text, error:'' })}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -253,14 +253,14 @@ function RegisterScreen({ navigation }) {
         placeholder="Password"
         returnKeyType="done"
         value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: '' })}
+        onChangeText={(text) => setPassword({ value:text, error:'' })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
         style={{ borderColor:"gray", width:"100%", borderWidth:1, borderRadius:10, padding:10, marginBottom:12 }}
       />
       <View style={{ width:'100%' }}>
-        <Button onPress={onSignUpPressed} style={{ marginTop: 24 }}>SIGN UP</Button>
+        <Button onPress={onSignUpPressed} style={{ marginTop:24 }}>SIGN UP</Button>
       </View>
       <View style={{ flexDirection:'row', marginTop:4 }}>
         <Text>Already have an account? </Text>
@@ -301,7 +301,7 @@ function LoginScreen({ navigation }) {
         placeholder="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error:'' })}
+        onChangeText={(text) => setEmail({ value:text, error:'' })}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -533,7 +533,7 @@ export default function App({ navigation }) {
             }
           },
           (err) => {
-            alert('Could not establish connection' ,err.message);
+            alert('Could not establish connection', err.message);
           },
         );
 

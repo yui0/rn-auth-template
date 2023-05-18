@@ -3,10 +3,9 @@ import {
   Alert,
   Linking,
   ScrollView,
-  Text,
   View
 } from 'react-native'
-//import { Button } from './Components';
+import { SText } from './Components';
 //import { Button, ButtonGroup, Layout, Text } from '@ui-kitten/components';
 
 interface LicenseFile {
@@ -32,16 +31,16 @@ export function LicenseScreen() {
   }*/
 
   return (
-    <View level='2' style={{ flex:1, justifyContent:'center' }}>
+    <View level='2' style={{ flex:1, justifyContent:'center', marginVertical:10, marginHorizontal:10 }}>
       <ScrollView>
         {licenseKeys.map((packageName: string) => {
           const license = licenseFile[packageName].licenses
           const licenseUrl = licenseFile[packageName].licenseUrl
           return (
             <View key={packageName}>
-              <Text category='s1'>{packageName}:</Text>
-              <Text category='label'>{license}</Text>
-              <Text category='c1'>{licenseUrl}</Text>
+              <SText c='s1'>{packageName}:</SText>
+              <SText c='label'>{license}</SText>
+              <SText c='c1'>{licenseUrl}</SText>
             </View>
           )
         })}
