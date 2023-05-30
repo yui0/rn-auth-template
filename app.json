@@ -2,7 +2,7 @@
   "expo": {
     "name": "rn-auth-template",
     "slug": "rn-auth-template",
-    "version": "2023-05-18",
+    "version": "2023-05-30",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

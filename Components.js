@@ -5,6 +5,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Linking,
+  Platform,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -255,3 +256,34 @@ export function Input({ l, e, ph, act, ac, v, kt, oct, ...props }: InputProps) {
     </View>
   );
 };*/
+
+// Card
+      /*shadowColor: 'black',
+      shadowOffset: { width: 0, height: 2 },
+      shadowRadius: 6,
+      shadowOpacity: 0.26,*/
+export function Card(props) {
+  return (
+    <View style={{
+      elevation:8,
+      backgroundColor:'white',
+      padding:20,
+      borderRadius:10,
+      ...props.style }}>
+      {props.children}
+    </View>
+  );
+}
+
+// Alert
+const alertPolyfill = (title, description, options, extra) => {
+  const result = window.confirm([title, description].filter(Boolean).join('\n'));
+  if (result) {
+    const confirmOption = options.find(({ style }) => style !== 'cancel');
+    confirmOption && confirmOption.onPress();
+  } else {
+    const cancelOption = options.find(({ style }) => style === 'cancel');
+    cancelOption && cancelOption.onPress();
+  }
+};
+export const alert = Platform.OS === 'web' ? alertPolyfill : Alert.alert;

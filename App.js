@@ -1,7 +1,7 @@
 // ©2023 Yuichiro Nakada
 import * as React from 'react';
 import {
-  Alert,
+  FlatList,
   Image,
   KeyboardAvoidingView,
   Linking,
@@ -32,7 +32,9 @@ import {
 } from '@react-navigation/drawer';
 
 import {
+  alert,
   Button,
+  Card,
   Input,
 } from './Components';
 
@@ -45,6 +47,33 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CryptoJS from "react-native-crypto-js";
 import axios from 'axios';
+// eve.holt@reqres.in
+// cityslicka
+axios.defaults.baseURL = 'https://reqres.in/api';
+//axios.defaults.baseURL = 'https://berry0.shop/api.php';
+//axios.defaults.withCredentials = true; // reqres is NOT support
+/*axios.interceptors.response.use(function (response) {
+  if (response.headers['x-xsrf-token']) {
+    response.headers.Cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
+    //response.headers['x-xsrf-token'] = response.headers['x-xsrf-token'];
+  }
+  return response;
+});*/
+/*axios.interceptors.request.use(
+  // allowedOriginと通信するときにトークンを付与するようにする設定
+  config => {
+    const { origin } = new URL(config.url as string);
+    const allowedOrigins = [apiUrl];
+    const token = localStorage.getItem('token');
+    if (allowedOrigins.includes(origin)) {
+      config.headers.authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);*/
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
 
@@ -62,17 +91,6 @@ async function setItem(key, value) {
   await AsyncStorage.setItem(key, CryptoJS.AES.encrypt(value, secretKey).toString());
 }
 
-/*var api = axios.create({
-  baseURL: 'https://berry0.shop/api.php',
-  withCredentials: true
-});
-api.interceptors.response.use(function (response) {
-  if (response.headers['x-xsrf-token']) {
-    document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
-  }
-  return response;
-});*/
-
 // Landing page
 function HomeScreen() {
   const { signOut } = React.useContext(AuthContext);
@@ -86,6 +104,76 @@ function HomeScreen() {
       <View style={{ width:'100%' }}>
         <Button onPress={signOut} style={{ marginTop:24 }}>SIGN OUT</Button>
       </View>
+    </View>
+  );
+}
+
+function ListScreen() {
+  const [data, setData] = React.useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
+  function getData() {
+    axios.get('/users').then((res) => {
+      /*res.data.records.unshift(['#','user','email','password']);
+      //console.log(res.data);
+      setData(res.data.records);*/
+
+      // reqres
+      //setData(Object.keys(res.data.data).map(function (key) {return [/*Number(key),*/ res.data.data[key]];}));
+      //console.log(Object.values(res.data.data));
+      let a = [];
+      for (let d of res.data.data) {
+        a.push(Object.values(d));
+      }
+      //console.log(a);
+      setData(a);
+    });
+  }
+  React.useEffect(() => {
+    getData();
+  }, []);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 500);
+  }, []);
+  function delData(id/*, point*/) {
+    if (alert('確認', 'このデータを消しますか'))
+    axios.delete('/users/'+id).then((res) => {
+      /*if (window.id) {
+        axios.get('/data?filter=uid,eq,'+window.id).then((res) => {
+          let d = res.data.data.records;
+          if (d.length>0) {
+            console.log(d[0][3]);
+            point = d[0][3] -point;
+            axios.put('/data/'+d[0][0], {shop:1, point:point}).then((res) => {
+              console.log(res);
+            });
+          }
+        });
+      }*/
+      getData();
+    });
+  }
+  const renderItem = ({item}) => (
+    <Card style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
+      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }} onPress={() => delData(item[0])}><Text>{item[0]}</Text></TouchableOpacity>
+      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[1]}</Text></TouchableOpacity>
+      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[2]}</Text></TouchableOpacity>
+      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[3]}</Text></TouchableOpacity>
+    </Card>
+  );
+  return (
+    <View style={{ flex:1, padding:20, /*width:'100%', maxWidth:400,*/
+      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+      <Text appearance='hint' category='c1' onPress={() => onRefresh()}>PULL TO REFRESH</Text>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+      />
     </View>
   );
 }
@@ -139,6 +227,7 @@ function SplashScreen() {
   );
 }
 
+// Login page
 export function emailValidator(email) {
   const re = /\S+@\S+\.\S+/
   if (!email) return "Email can't be empty."
@@ -451,6 +540,7 @@ export default function App({ navigation }) {
         // userToken = await SecureStore.getItemAsync('userToken');
         //userToken = await AsyncStorage.getItem('userToken');
         userToken = await getItem('userToken');
+        axios.defaults.headers['X-XSRF-TOKEN'] = await getItem('XSRF-TOKEN');
         dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
         // Restoring token failed
@@ -477,12 +567,8 @@ export default function App({ navigation }) {
         // In the example, we'll use a dummy token
 
         AsyncStorage.removeItem('userToken');
-        //console.log(email);
-        // eve.holt@reqres.in
-        // cityslicka
-        const ENDPOINT = 'https://reqres.in/api/login';
-        //const ENDPOINT = 'https://berry0.shop/api.php/login';
-        axios.post(ENDPOINT, {
+        AsyncStorage.removeItem('XSRF-TOKEN');
+        axios.post('/login', {
           email: email,
           user: email, // for berry
           password: password
@@ -491,10 +577,12 @@ export default function App({ navigation }) {
           if (response.status === 200) {
             try {
               setItem('userToken', response.data.token);
-              /*api.post('/', {token:response.data.token}).then(function (response) {
+              axios.post('/', {token:response.data.token}).then(function (response) {
+                setItem('XSRF-TOKEN', response.data);
+                axios.defaults.headers['X-XSRF-TOKEN'] = response.data;
               }).catch(function (e) {
                 console.log(e);
-              });*/
+              });
               //setItem('AUTH-TOKEN', response.data.token);
             } catch (e) {
               console.log(e);
@@ -511,6 +599,7 @@ export default function App({ navigation }) {
       },
       signOut: () => {
         AsyncStorage.removeItem('userToken');
+        AsyncStorage.removeItem('XSRF-TOKEN');
         dispatch({ type:'SIGN_OUT' });
       },
       signUp: async (name, email, password) => {
@@ -553,7 +642,7 @@ export default function App({ navigation }) {
           </Stack.Navigator>
         ) : state.userToken == null ? (
           // No token found, user isn't signed in
-          <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown:false}}>
+          <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown:false }}>
             <Stack.Screen name="LoginScreen" component={LoginScreen}
               options={{
                 title: 'Sign in',
@@ -593,6 +682,15 @@ export default function App({ navigation }) {
                 drawerIcon: ({focused, color, size}) => (<Ionicons name="ios-snow" size={size} color={color} />),
               }}
               component={SettingScreenStack}
+            />
+            <Drawer.Screen
+              name="ListScreen"
+              options={{
+                drawerLabel: 'List',
+                title: 'List',
+                drawerIcon: ({focused, color, size}) => (<Ionicons name="ios-snow" size={size} color={color} />),
+              }}
+              component={ListScreen}
             />
             <Drawer.Screen
               name="LicenseScreen"
