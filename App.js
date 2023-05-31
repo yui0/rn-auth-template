@@ -139,31 +139,65 @@ function ListScreen() {
     }, 500);
   }, []);
   function delData(id/*, point*/) {
-    if (alert('確認', 'このデータを消しますか'))
-    axios.delete('/users/'+id).then((res) => {
-      /*if (window.id) {
-        axios.get('/data?filter=uid,eq,'+window.id).then((res) => {
-          let d = res.data.data.records;
-          if (d.length>0) {
-            console.log(d[0][3]);
-            point = d[0][3] -point;
-            axios.put('/data/'+d[0][0], {shop:1, point:point}).then((res) => {
-              console.log(res);
-            });
-          }
-        });
-      }*/
-      getData();
-    });
+    alert(
+      '確認',
+      'このデータを消しますか',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => {
+          console.log('OK Pressed')
+          axios.delete('/users/'+id).then((res) => {
+            /*if (window.id) {
+              axios.get('/data?filter=uid,eq,'+window.id).then((res) => {
+                let d = res.data.data.records;
+                if (d.length>0) {
+                  console.log(d[0][3]);
+                  point = d[0][3] -point;
+                  axios.put('/data/'+d[0][0], {shop:1, point:point}).then((res) => {
+                    console.log(res);
+                  });
+                }
+              });
+            }*/
+            getData();
+          });
+        }},
+      ]
+    );
   }
-  const renderItem = ({item}) => (
+  /*const renderItem = ({item}) => (
     <Card style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
       <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }} onPress={() => delData(item[0])}><Text>{item[0]}</Text></TouchableOpacity>
       <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[1]}</Text></TouchableOpacity>
       <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[2]}</Text></TouchableOpacity>
       <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[3]}</Text></TouchableOpacity>
     </Card>
-  );
+  );*/
+  const renderItem = ({item}) => {
+    return(
+      <View style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
+        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:'white', borderTopLeftRadius:10, borderBottomLeftRadius:10 }} onPress={() => delData(item[0])}><Text>{item[0]}</Text></TouchableOpacity>
+        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:theme['color-primary-100'] }}><Text>{item[1]}</Text></TouchableOpacity>
+        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:'white' }}><Text>{item[2]}</Text></TouchableOpacity>
+        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:theme['color-primary-100'], borderTopRightRadius:10, borderBottomRightRadius:10 }}><Text>{item[3]}</Text></TouchableOpacity>
+      </View>
+    )
+    /*return(
+      <View style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
+        {data.map(() => {
+          let s = '';
+          for (let d of item) {
+            s += "<TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:'white' }}><Text>"+d+"</Text></TouchableOpacity>";
+          }
+          return s;
+        })}
+      </View>
+    )*/
+  };
   return (
     <View style={{ flex:1, padding:20, /*width:'100%', maxWidth:400,*/
       alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
