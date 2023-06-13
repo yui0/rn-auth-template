@@ -8,7 +8,7 @@
 
 React Native Authentication Template
 
-You can try this from this.
+You can try this software at the next URL.
 
 https://expo.dev/@yui.nakada/rn-auth-template?serviceType=classic&distribution=expo-go
 
@@ -25,6 +25,8 @@ Password: cityslicka
 * Async Storage with [React Native CryptoJS](https://github.com/imchintan/react-native-crypto-js)
 * axios
 * Support UI Kitten theme
+* REST API can use for authentication
+  * https://github.com/yui0/php-db-api
 
 # How to build
 
@@ -33,7 +35,8 @@ Password: cityslicka
 #ncu -u
 yarn
 yarn web
-expo publish
+#expo publish
+make
 ```
 
 # Screenshots

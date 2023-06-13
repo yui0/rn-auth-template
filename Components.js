@@ -2,9 +2,12 @@
 import * as React from 'react';
 import {
   Alert,
+  Dimensions,
+  FlatList,
   Image,
   KeyboardAvoidingView,
   Linking,
+  Modal,
   Platform,
   Pressable,
   SafeAreaView,
@@ -18,7 +21,6 @@ import {
 //import * as Animatable from 'react-native-animatable';
 // https://colors.eva.design/
 const theme = require('./theme-orange.json');
-
 const theme_styles = StyleSheet.create({
   h1: {
     fontSize: 32,
@@ -89,6 +91,8 @@ const theme_styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+const height = Dimensions.get('window').height;
+const width = Dimensions.get('window').width;
 
 // https://github.com/WrathChaos/react-native-custom-text/tree/master
 interface STextProps extends TextProps {
@@ -108,6 +112,7 @@ export function SText({children, c, style, ...props}: STextProps) {
   );
 }
 
+// Button
 interface ButtonProps {
     children: React.ReactNode,
     mode?: "flat" | "normal",
@@ -153,6 +158,7 @@ export function Button({children, onPress, mode, style}: ButtonProps) {
   );
 }
 
+// Input
 interface InputProps {
     ph: null,
     act: null,
@@ -287,3 +293,73 @@ const alertPolyfill = (title, description, options, extra) => {
   }
 };
 export const alert = Platform.OS === 'web' ? alertPolyfill : Alert.alert;
+
+// useEffectAsync
+export default function useEffectAsync(
+  effect: () => any,
+  deps?: DependencyList
+) {
+  React.useEffect(() => {
+    effect();
+  }, deps);
+}
+
+// EList
+export function EList(props) {
+  const [data, setData] = React.useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
+  const [text, setText] = React.useState('');
+  const [id, setID] = React.useState(0);
+  useEffectAsync(async () => {
+    setData(await props.getData());
+  }, []);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    setData(await props.getData());
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 500);
+  }, []);
+  const renderItem = ({item}) => {
+    return(
+      <View style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
+        {item.map((column, i) => (
+          <TouchableOpacity key={i} onPress={() => {setID(item[0]); setText(column); setVisible(true);}} style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:i%2?theme['color-primary-100']:'white', borderTopLeftRadius:i===0?10:0, borderBottomLeftRadius:i===0?10:0, borderTopRightRadius:i===item.length-1?10:0, borderBottomRightRadius:i===item.length-1?10:0 }}><Text>{column}</Text></TouchableOpacity>
+        ))}
+      </View>
+    )
+  };
+  return (
+    <View style={{ flex:1, padding:20, /*width:'100%', maxWidth:400,*/
+      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
+      <Text appearance='hint' category='c1' onPress={() => onRefresh()}>PULL TO REFRESH</Text>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+      />
+      <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={() => setVisible(false)}>
+        <View style={{ flex:1, position:'absolute', alignSelf:'center', top:height/5, margin:20, padding:35, backgroundColor:'white', borderRadius:20,
+          shadowColor:'#000',
+          shadowOffset:{ width:0, height:2},
+          shadowOpacity:0.25,
+          shadowRadius:3.84,
+          elevation:5,
+        }}>
+          <Input
+            onChangeText={(text) => {setText(text); console.log('state:', text)}}
+            defaultValue={text}
+            editable = {true}
+            multiline = {false}
+            maxLength = {200}
+          />
+          <Button style={{margin:2}} onPress={() => {if (props.saveData) props.saveData(id, text); setVisible(false)}}>OK</Button>
+          <Button style={{margin:2}} onPress={() => {setVisible(false)}}>CANCEL</Button>
+          <Button style={{margin:2}} onPress={() => {if (props.delData) props.delData(id); setVisible(false)}}>REMOVE</Button>
+        </View>
+      </Modal>
+    </View>
+  );
+}

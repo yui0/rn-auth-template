@@ -35,6 +35,7 @@ import {
   alert,
   Button,
   Card,
+  EList,
   Input,
 } from './Components';
 
@@ -52,28 +53,6 @@ import axios from 'axios';
 axios.defaults.baseURL = 'https://reqres.in/api';
 //axios.defaults.baseURL = 'https://berry0.shop/api.php';
 //axios.defaults.withCredentials = true; // reqres is NOT support
-/*axios.interceptors.response.use(function (response) {
-  if (response.headers['x-xsrf-token']) {
-    response.headers.Cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
-    //response.headers['x-xsrf-token'] = response.headers['x-xsrf-token'];
-  }
-  return response;
-});*/
-/*axios.interceptors.request.use(
-  // allowedOriginと通信するときにトークンを付与するようにする設定
-  config => {
-    const { origin } = new URL(config.url as string);
-    const allowedOrigins = [apiUrl];
-    const token = localStorage.getItem('token');
-    if (allowedOrigins.includes(origin)) {
-      config.headers.authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);*/
 //import { BeakerIcon } from '@heroicons/react/24/solid';
 //import Icon from 'supercons';
 
@@ -109,35 +88,20 @@ function HomeScreen() {
 }
 
 function ListScreen() {
-  const [data, setData] = React.useState('');
-  const [refreshing, setRefreshing] = React.useState(false);
-  function getData() {
-    axios.get('/users').then((res) => {
-      /*res.data.records.unshift(['#','user','email','password']);
-      //console.log(res.data);
-      setData(res.data.records);*/
+  const getData = async () => {
+    const res = await axios.get('/users');
+    /*res.data.records.unshift(['#','user','email','password']);
+    //console.log(res.data);
+    return res.data.records;*/
 
-      // reqres
-      //setData(Object.keys(res.data.data).map(function (key) {return [/*Number(key),*/ res.data.data[key]];}));
-      //console.log(Object.values(res.data.data));
-      let a = [];
-      for (let d of res.data.data) {
-        a.push(Object.values(d));
-      }
-      //console.log(a);
-      setData(a);
-    });
-  }
-  React.useEffect(() => {
-    getData();
-  }, []);
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    getData();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 500);
-  }, []);
+    // reqres
+    let a = [];
+    for (let d of res.data.data) {
+      a.push(Object.values(d));
+    }
+    //console.log(a);
+    return a;
+  };
   function delData(id/*, point*/) {
     alert(
       '確認',
@@ -169,45 +133,9 @@ function ListScreen() {
       ]
     );
   }
-  /*const renderItem = ({item}) => (
-    <Card style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
-      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }} onPress={() => delData(item[0])}><Text>{item[0]}</Text></TouchableOpacity>
-      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[1]}</Text></TouchableOpacity>
-      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[2]}</Text></TouchableOpacity>
-      <TouchableOpacity style={{ flex:1, alignSelf:'stretch' }}><Text>{item[3]}</Text></TouchableOpacity>
-    </Card>
-  );*/
-  const renderItem = ({item}) => {
-    return(
-      <View style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
-        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:'white', borderTopLeftRadius:10, borderBottomLeftRadius:10 }} onPress={() => delData(item[0])}><Text>{item[0]}</Text></TouchableOpacity>
-        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:theme['color-primary-100'] }}><Text>{item[1]}</Text></TouchableOpacity>
-        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:'white' }}><Text>{item[2]}</Text></TouchableOpacity>
-        <TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:theme['color-primary-100'], borderTopRightRadius:10, borderBottomRightRadius:10 }}><Text>{item[3]}</Text></TouchableOpacity>
-      </View>
-    )
-    /*return(
-      <View style={{ flex:1, alignSelf:'stretch', flexDirection:'row', width:800, margin:2 }}>
-        {data.map(() => {
-          let s = '';
-          for (let d of item) {
-            s += "<TouchableOpacity style={{ flex:1, alignSelf:'stretch', padding:20, backgroundColor:'white' }}><Text>"+d+"</Text></TouchableOpacity>";
-          }
-          return s;
-        })}
-      </View>
-    )*/
-  };
   return (
-    <View style={{ flex:1, padding:20, /*width:'100%', maxWidth:400,*/
-      alignSelf:'center', alignItems:'center', justifyContent:'center' }}>
-      <Text appearance='hint' category='c1' onPress={() => onRefresh()}>PULL TO REFRESH</Text>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        onRefresh={onRefresh}
-        refreshing={refreshing}
-      />
+    <View style={{ flex:1 }}>
+      <EList getData={() => getData()} delData={() => delData()} />
     </View>
   );
 }
@@ -574,6 +502,7 @@ export default function App({ navigation }) {
         // userToken = await SecureStore.getItemAsync('userToken');
         //userToken = await AsyncStorage.getItem('userToken');
         userToken = await getItem('userToken');
+        axios.defaults.headers['X-Authorization'] = `Bearer ${userToken}`;
         axios.defaults.headers['X-XSRF-TOKEN'] = await getItem('XSRF-TOKEN');
         dispatch({ type:'RESTORE_TOKEN', token:userToken });
       } catch (e) {
@@ -611,6 +540,7 @@ export default function App({ navigation }) {
           if (response.status === 200) {
             try {
               setItem('userToken', response.data.token);
+              axios.defaults.headers['X-Authorization'] = `Bearer ${response.data.token}`;
               axios.post('/', {token:response.data.token}).then(function (response) {
                 setItem('XSRF-TOKEN', response.data);
                 axios.defaults.headers['X-XSRF-TOKEN'] = response.data;
