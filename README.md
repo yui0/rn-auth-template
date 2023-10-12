@@ -33,6 +33,7 @@ Password: cityslicka
 ```
 #ncu
 #ncu -u
+#npx expo install --fix
 yarn
 yarn web
 #expo publish
